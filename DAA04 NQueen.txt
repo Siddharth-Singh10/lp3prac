@@ -1,0 +1,79 @@
+def is_safe(board, row, col, n):
+    # Check if a queen can be placed at board[row][col]
+
+    # Check left side of current row
+    for i in range(col):
+        if board[row][i] == 1:
+            return False
+
+    # Check upper diagonal on the left side
+    i, j = row, col
+    while i >= 0 and j >= 0:
+        if board[i][j] == 1:
+            return False
+        i -= 1
+        j -= 1
+
+    # Check lower diagonal on the left side
+    i, j = row, col
+    while i < n and j >= 0:
+        if board[i][j] == 1:
+            return False
+        i += 1
+        j -= 1
+
+    return True
+
+
+def solve_n_queens_util(board, col, n, solutions, first_queen_cols):
+    # Base case: If all queens are placed, add the solution to the list
+    if col >= n:
+        solution = []
+        for row in board:
+            solution.append("".join(["Q" if cell == 1 else "-" for cell in row]))
+        solutions.append(solution)
+        first_queen_cols.append(board[0].index(1) + 1)  # Get the column index of the first queen
+        return
+
+    # Try placing the queen in each row of the current column
+    for i in range(n):
+        if is_safe(board, i, col, n):
+            # Place the queen at board[i][col]
+            board[i][col] = 1
+
+            # Recur to place the rest of the queens
+            solve_n_queens_util(board, col + 1, n, solutions, first_queen_cols)
+
+            # Backtrack and remove the queen from board[i][col]
+            board[i][col] = 0
+
+
+def solve_n_queens(n):
+    # Create an empty board
+    board = [[0] * n for _ in range(n)]
+
+    # List to store all solutions
+    solutions = []
+
+    # List to store the column index of the first queen in each solution
+    first_queen_cols = []
+
+    # Solve the N-Queens problem
+    solve_n_queens_util(board, 0, n, solutions, first_queen_cols)
+
+    return solutions, first_queen_cols
+
+
+# Get the board size from the user
+n = int(input("Enter the board size: "))
+
+# Solve the N-Queens problem and get all solutions along with the first queen column indices
+all_solutions, first_queen_cols = solve_n_queens(n)
+
+# Display all solutions along with the column index of the first queen
+print(f"All possible solutions for N = {n}:")
+for i, (solution, first_queen_col) in enumerate(zip(all_solutions, first_queen_cols)):
+    print(f"Solution {i + 1} (First Queen at Column {first_queen_col}):")
+    for row in solution:
+        print(row)
+    print()

@@ -1,0 +1,31 @@
+import numpy as np
+
+# Define the function and its gradient
+def func(x):
+    return (x + 3)**2
+
+def gradient(x):
+    return 2 * (x + 3)
+
+# Gradient Descent function
+def gradient_descent(starting_point, learning_rate, num_iterations):
+    x = starting_point
+
+    for i in range(num_iterations):
+        # Update x using the gradient descent update rule
+        x = x - learning_rate * gradient(x)
+
+        # Print the current iteration, the corresponding x value, and the value of the function at x
+        print(f"Iteration {i + 1}: x = {x}, y = {func(x)}")
+
+    return x, func(x)
+
+# Set the initial parameters
+starting_point = 2
+learning_rate = 0.1
+num_iterations = 100
+
+# Run the gradient descent algorithm
+result, min_function_value = gradient_descent(starting_point, learning_rate, num_iterations)
+
+print(f"\nLocal minimum occurs at x = {result}, and the function value at the local minimum is {min_function_value}")
